@@ -6,8 +6,8 @@ module.exports = {
     url: 'http://localhost',
     resources: 'usable',
   },
-  rootDir: 'lib/cjs/tests',
-  setupFiles: ['<rootDir>/setup.jest.js'],
-  setupFilesAfterEnv: ['<rootDir>/setupAfterEnv.jest.js'],
+  rootDir: '.',
+  testMatch: ['<rootDir>/src/tests/**/*.test.{ts,tsx,js,jsx}'],
+  modulePathIgnorePatterns: ['<rootDir>/lib/'],
   testTimeout: 20_000,
 };
