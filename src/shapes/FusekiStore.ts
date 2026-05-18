@@ -89,7 +89,9 @@ export class FusekiStore extends SparqlStore {
   protected async executeSparqlSelect(
     sparql: string
   ): Promise<SparqlJsonResults> {
-    const endpoint = `${this.baseUrl}/${this.dataset}/sparql`;
+    const endpoint = this.defaultGraph
+      ? `${this.baseUrl}/${this.dataset}/sparql?default-graph-uri=${encodeURIComponent(this.defaultGraph)}`
+      : `${this.baseUrl}/${this.dataset}/sparql`;
     const headers = this.getHeaders({
       'Content-Type': 'application/sparql-query',
       Accept: 'application/sparql-results+json',

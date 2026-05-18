@@ -20,8 +20,8 @@
     "build": "npm exec linked build",
     "prepublishOnly": "npm exec linked build production",
     "postpublish": "npm exec linked register",
-    "test": "NODE_OPTIONS='' env-cmd -e development yarn jest",
-    "test-debug": "env-cmd -e development yarn jest"
+    "test": "NODE_OPTIONS='' env-cmd -e development yarn jest --passWithNoTests",
+    "test-debug": "env-cmd -e development yarn jest --passWithNoTests"
   },
   "keywords": [
     "lincd",
