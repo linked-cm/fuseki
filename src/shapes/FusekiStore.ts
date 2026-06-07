@@ -11,6 +11,9 @@ import {
   ensureDatasetExists as ensureDatasetExistsUtil,
 } from '../utils/datasets.js';
 
+// Verbose per-query logs are off by default. Enable with DEBUG_FUSEKI=1.
+const DEBUG = !!process.env.DEBUG_FUSEKI;
+
 export interface ImportOptions {
   contentType?: string;
   graph?: string;
@@ -138,8 +141,10 @@ export class FusekiStore extends SparqlDataset {
       Accept: 'application/sparql-results+json',
     });
 
-    console.log(`[FusekiStore] SPARQL query -> ${endpoint}`);
-    console.log(`[FusekiStore] query: ${sparql}`);
+    if (DEBUG) {
+      console.log(`[FusekiStore] SPARQL query -> ${endpoint}`);
+      console.log(`[FusekiStore] query: ${sparql}`);
+    }
 
     const res = await fetch(endpoint, {
       method: 'POST',
@@ -168,8 +173,10 @@ export class FusekiStore extends SparqlDataset {
       Accept: 'application/sparql-results+json, application/json, text/plain',
     });
 
-    console.log(`[FusekiStore] SPARQL update -> ${endpoint}`);
-    console.log(`[FusekiStore] query: ${sparql}`);
+    if (DEBUG) {
+      console.log(`[FusekiStore] SPARQL update -> ${endpoint}`);
+      console.log(`[FusekiStore] query: ${sparql}`);
+    }
 
     const res = await fetch(endpoint, {
       method: 'POST',
@@ -280,7 +287,9 @@ export class FusekiStore extends SparqlDataset {
       Accept: 'application/json, text/plain',
     });
 
-    console.log(`[FusekiStore] importData (${mode}) -> ${endpoint}`);
+    if (DEBUG) {
+      console.log(`[FusekiStore] importData (${mode}) -> ${endpoint}`);
+    }
     try {
       const res = await fetch(endpoint, {
         method,
