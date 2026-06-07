@@ -6,8 +6,8 @@ module.exports = {
     url: 'http://localhost',
     resources: 'usable',
   },
-  rootDir: 'lib/cjs/tests',
-  setupFiles: ['<rootDir>/setup.jest.js'],
-  setupFilesAfterEnv: ['<rootDir>/setupAfterEnv.jest.js'],
+  // No tests live in this repo yet. When tests are added under e.g. src/__tests__
+  // or tests/, set rootDir + setupFiles back to point at them.
+  testMatch: [],
   testTimeout: 20_000,
 };
