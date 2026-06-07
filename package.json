@@ -10,7 +10,7 @@
     "type": "git",
     "url": ""
   },
-  "version": "2.0.0",
+  "version": "2.0.1",
   "linkedPackage": true,
   "main": "lib/index.js",
   "types": "dist/lincd-fuseki.d.ts",

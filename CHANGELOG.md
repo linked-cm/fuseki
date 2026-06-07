@@ -1,5 +1,11 @@
 # @\_linked/fuseki
 
+## 2.0.1
+
+### Patch Changes
+
+- [#5](https://github.com/linked-cm/fuseki/pull/5) [`ab63a6e`](https://github.com/linked-cm/fuseki/commit/ab63a6e18b1d75914495d5368e30851c2827869c) Thanks [@flyon](https://github.com/flyon)! - Verbose SPARQL query / update / importData console logs are off by default. Set `DEBUG_FUSEKI=1` in the environment to bring them back when debugging. Error/warn output is unchanged.
+
 ## 2.0.0
 
 ### Major Changes
