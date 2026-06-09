@@ -29,14 +29,18 @@ export class FusekiStore extends SparqlDataset {
     baseUrl: string = process.env.FUSEKI_BASE_URL,
     options?: { defaultGraph?: string }
   ) {
+    const resolvedDefaultGraph =
+      options?.defaultGraph ?? process.env.FUSEKI_DEFAULT_GRAPH;
     const normalizedDataset = dataset
       ? FusekiStore.normalizeDatasetName(dataset)
       : '';
-    super();
+    super({
+      dataRoot: process.env.DATA_ROOT,
+      graph: resolvedDefaultGraph,
+    });
     this.baseUrl = baseUrl.replace(/\/+$/, '');
     this.dataset = normalizedDataset;
-    this.defaultGraph =
-      options?.defaultGraph ?? process.env.FUSEKI_DEFAULT_GRAPH;
+    this.defaultGraph = resolvedDefaultGraph;
   }
 
   private static normalizeDatasetName(
