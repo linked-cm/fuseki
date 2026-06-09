@@ -1,4 +1,4 @@
-import { SparqlStore } from '@_linked/core/sparql/SparqlStore';
+import { SparqlDataset } from '@_linked/core/sparql/SparqlDataset';
 import type { SparqlJsonResults } from '@_linked/core/sparql/resultMapping';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -18,7 +18,7 @@ export interface ImportOptions {
 }
 
 @linkedShape
-export class FusekiStore extends SparqlStore {
+export class FusekiStore extends SparqlDataset {
   static targetClass = fuseki.FusekiStore;
   private baseUrl: string;
   private dataset: string;
@@ -84,7 +84,7 @@ export class FusekiStore extends SparqlStore {
     return headers;
   }
 
-  // ── SparqlStore abstract method implementations ──
+  // ── SparqlDataset abstract method implementations ──
 
   protected async executeSparqlSelect(
     sparql: string
