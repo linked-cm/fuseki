@@ -11,10 +11,31 @@ import {
   ensureDatasetExists as ensureDatasetExistsUtil,
 } from '../utils/datasets.js';
 
+// Verbose per-query logs are off by default. Enable with DEBUG_FUSEKI=1.
+const DEBUG = !!process.env.DEBUG_FUSEKI;
+
 export interface ImportOptions {
   contentType?: string;
   graph?: string;
   mode?: 'append' | 'replace';
+}
+
+/**
+ * Constructor argument for `new FusekiStore(config)`. Spec aligned with
+ * docs/backlog/016-ejection-export-flow.md — a single JSON object passed
+ * verbatim from `linked.datasets.json`'s `config` field.
+ */
+export interface FusekiStoreConfig {
+  /** Full SPARQL dataset endpoint, e.g. "http://localhost:3030/myapp-main". */
+  endpoint: string;
+  /** Optional credentials. Falls back to FUSEKI_USER/FUSEKI_PASSWORD env vars when absent. */
+  credentials?: {
+    type?: 'basic';
+    username: string;
+    password: string;
+  };
+  /** Optional default graph IRI. Falls back to FUSEKI_DEFAULT_GRAPH env var when absent. */
+  defaultGraph?: string;
 }
 
 @linkedShape
@@ -23,24 +44,34 @@ export class FusekiStore extends SparqlDataset {
   private baseUrl: string;
   private dataset: string;
   private defaultGraph?: string;
+  private credentials?: { username: string; password: string };
 
-  constructor(
-    dataset?: string | { value?: string } | { id?: string },
-    baseUrl: string = process.env.FUSEKI_BASE_URL,
-    options?: { defaultGraph?: string }
-  ) {
-    const resolvedDefaultGraph =
-      options?.defaultGraph ?? process.env.FUSEKI_DEFAULT_GRAPH;
-    const normalizedDataset = dataset
-      ? FusekiStore.normalizeDatasetName(dataset)
-      : '';
-    super({
-      dataRoot: process.env.DATA_ROOT,
-      graph: resolvedDefaultGraph,
-    });
-    this.baseUrl = baseUrl.replace(/\/+$/, '');
-    this.dataset = normalizedDataset;
-    this.defaultGraph = resolvedDefaultGraph;
+  // The union with `string | {id?: string}` (Shape's base constructor signature)
+  // keeps the @linkedShape decorator happy. At runtime we only accept the
+  // config-object form per docs/backlog/016-ejection-export-flow.md.
+  constructor(config?: FusekiStoreConfig | string | { id?: string }) {
+    super();
+    if (
+      !config ||
+      typeof config === 'string' ||
+      !(config as FusekiStoreConfig).endpoint
+    ) {
+      throw new Error(
+        'FusekiStore: pass a FusekiStoreConfig object with at least { endpoint: "http://host:port/dataset" }.',
+      );
+    }
+    config = config as FusekiStoreConfig;
+    const url = new URL(config.endpoint);
+    this.baseUrl = `${url.protocol}//${url.host}`;
+    this.dataset = FusekiStore.normalizeDatasetName(url.pathname);
+    this.defaultGraph =
+      config.defaultGraph ?? process.env.FUSEKI_DEFAULT_GRAPH;
+    if (config.credentials) {
+      this.credentials = {
+        username: config.credentials.username,
+        password: config.credentials.password,
+      };
+    }
   }
 
   private static normalizeDatasetName(
@@ -65,10 +96,18 @@ export class FusekiStore extends SparqlDataset {
   }
 
   private getAdminAuth() {
+    if (this.credentials) {
+      return {
+        username: this.credentials.username,
+        password: this.credentials.password,
+      };
+    }
     const authUser = process.env.FUSEKI_USER;
     const authPass = process.env.FUSEKI_PASSWORD;
     if (!authUser || !authPass) {
-      throw new Error('FUSEKI_USER and FUSEKI_PASSWORD are required.');
+      throw new Error(
+        'FUSEKI_USER and FUSEKI_PASSWORD env vars are required (or pass `credentials` in FusekiStoreConfig).',
+      );
     }
     return { username: authUser, password: authPass };
   }
@@ -77,6 +116,9 @@ export class FusekiStore extends SparqlDataset {
     extra: Record<string, string> = {}
   ): Record<string, string> {
     const headers = { ...extra };
+    if (this.credentials) {
+      return buildAuthHeaders(this.credentials, extra);
+    }
     const authUser = process.env.FUSEKI_USER;
     const authPass = process.env.FUSEKI_PASSWORD;
     if (authUser && authPass) {
@@ -101,8 +143,10 @@ export class FusekiStore extends SparqlDataset {
       Accept: 'application/sparql-results+json',
     });
 
-    console.log(`[FusekiStore] SPARQL query -> ${endpoint}`);
-    console.log(`[FusekiStore] query: ${sparql}`);
+    if (DEBUG) {
+      console.log(`[FusekiStore] SPARQL query -> ${endpoint}`);
+      console.log(`[FusekiStore] query: ${sparql}`);
+    }
 
     const res = await fetch(endpoint, {
       method: 'POST',
@@ -131,8 +175,10 @@ export class FusekiStore extends SparqlDataset {
       Accept: 'application/sparql-results+json, application/json, text/plain',
     });
 
-    console.log(`[FusekiStore] SPARQL update -> ${endpoint}`);
-    console.log(`[FusekiStore] query: ${sparql}`);
+    if (DEBUG) {
+      console.log(`[FusekiStore] SPARQL update -> ${endpoint}`);
+      console.log(`[FusekiStore] query: ${sparql}`);
+    }
 
     const res = await fetch(endpoint, {
       method: 'POST',
@@ -243,7 +289,9 @@ export class FusekiStore extends SparqlDataset {
       Accept: 'application/json, text/plain',
     });
 
-    console.log(`[FusekiStore] importData (${mode}) -> ${endpoint}`);
+    if (DEBUG) {
+      console.log(`[FusekiStore] importData (${mode}) -> ${endpoint}`);
+    }
     try {
       const res = await fetch(endpoint, {
         method,

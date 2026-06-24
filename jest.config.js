@@ -6,8 +6,8 @@ module.exports = {
     url: 'http://localhost',
     resources: 'usable',
   },
-  rootDir: '.',
-  testMatch: ['<rootDir>/src/tests/**/*.test.{ts,tsx,js,jsx}'],
-  modulePathIgnorePatterns: ['<rootDir>/lib/'],
+  // No tests live in this repo yet. When tests are added under e.g. src/__tests__
+  // or tests/, set rootDir + setupFiles back to point at them.
+  testMatch: [],
   testTimeout: 20_000,
 };
