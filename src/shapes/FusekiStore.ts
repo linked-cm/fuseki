@@ -50,7 +50,6 @@ export class FusekiStore extends SparqlDataset {
   // keeps the @linkedShape decorator happy. At runtime we only accept the
   // config-object form per docs/backlog/016-ejection-export-flow.md.
   constructor(config?: FusekiStoreConfig | string | { id?: string }) {
-    super();
     if (
       !config ||
       typeof config === 'string' ||
@@ -61,11 +60,16 @@ export class FusekiStore extends SparqlDataset {
       );
     }
     config = config as FusekiStoreConfig;
+    const defaultGraph =
+      config.defaultGraph ?? process.env.FUSEKI_DEFAULT_GRAPH;
+    super({
+      dataRoot: process.env.DATA_ROOT,
+      graph: defaultGraph,
+    });
     const url = new URL(config.endpoint);
     this.baseUrl = `${url.protocol}//${url.host}`;
     this.dataset = FusekiStore.normalizeDatasetName(url.pathname);
-    this.defaultGraph =
-      config.defaultGraph ?? process.env.FUSEKI_DEFAULT_GRAPH;
+    this.defaultGraph = defaultGraph;
     if (config.credentials) {
       this.credentials = {
         username: config.credentials.username,
@@ -135,7 +139,9 @@ export class FusekiStore extends SparqlDataset {
   protected async executeSparqlSelect(
     sparql: string
   ): Promise<SparqlJsonResults> {
-    const endpoint = `${this.baseUrl}/${this.dataset}/sparql`;
+    const endpoint = this.defaultGraph
+      ? `${this.baseUrl}/${this.dataset}/sparql?default-graph-uri=${encodeURIComponent(this.defaultGraph)}`
+      : `${this.baseUrl}/${this.dataset}/sparql`;
     const headers = this.getHeaders({
       'Content-Type': 'application/sparql-query',
       Accept: 'application/sparql-results+json',
