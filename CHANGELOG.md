@@ -1,5 +1,11 @@
 # @\_linked/fuseki
 
+## 2.0.2
+
+### Patch Changes
+
+- [#8](https://github.com/linked-cm/fuseki/pull/8) [`dedcef5`](https://github.com/linked-cm/fuseki/commit/dedcef54276e0f5659c5550b046accfe351e46b6) Thanks [@flyon](https://github.com/flyon)! - ESM-only — drops the CommonJS build (`type: module`, no `require` export condition, no `lib/cjs`); type-only imports; ESM-safe. Fixes root `types` field.
+
 ## 2.0.1
 
 ### Patch Changes
