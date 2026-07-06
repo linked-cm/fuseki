@@ -1,5 +1,11 @@
 # @\_linked/fuseki
 
+## 2.0.3
+
+### Patch Changes
+
+- [#9](https://github.com/linked-cm/fuseki/pull/9) [`0b88d19`](https://github.com/linked-cm/fuseki/commit/0b88d197eabd999e6d2fd45bb8804b456f175552) Thanks [@flyon](https://github.com/flyon)! - loadData: ESM-only JSON import — drop the dead CJS branch, add the `{ with: { type: 'json' } }` import attribute.
+
 ## 2.0.2
 
 ### Patch Changes
