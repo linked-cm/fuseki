@@ -7,17 +7,10 @@ import * as _this from './fuseki.js';
  * Load the data of this ontology into memory, thus adding the properties of the entities of this ontology to the local graph.
  */
 export var loadData = () => {
-  if (typeof module !== 'undefined' && typeof exports !== 'undefined') {
-    // CommonJS import
-    return import('../data/fuseki.json');
-  } else {
-    // ESM import
-    //@ts-ignore
-    return import('../data/fuseki.json', { with: { type: 'json' } }).then(
-      //@ts-ignore
-      (data) => data.default
-    );
-  }
+  //@ts-ignore
+  return import('../data/fuseki.json', { with: { type: 'json' } }).then(
+    (data) => data.default
+  );
 };
 
 /**
