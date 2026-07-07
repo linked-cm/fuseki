@@ -1,5 +1,11 @@
 # @\_linked/fuseki
 
+## 2.0.4
+
+### Patch Changes
+
+- [#12](https://github.com/linked-cm/fuseki/pull/12) [`eb0281e`](https://github.com/linked-cm/fuseki/commit/eb0281e20575bfeb5be2eb79347b1b97dc3fa49c) Thanks [@flyon](https://github.com/flyon)! - Remove the `development` export condition (pointed at `src`, which isn't shipped to npm). Monorepo dev resolves workspace source via the cli Vite plugin; standalone resolves `import → lib`. No consumer-visible change.
+
 ## 2.0.3
 
 ### Patch Changes
