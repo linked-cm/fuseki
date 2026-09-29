@@ -1,5 +1,11 @@
 # @\_linked/fuseki
 
+## 3.2.2
+
+### Patch Changes
+
+- [#36](https://github.com/linked-fw/fuseki/pull/36) [`613ae40`](https://github.com/linked-fw/fuseki/commit/613ae403215d72659a09ee8bca1f4c1c00bb4596) Thanks [@flyon](https://github.com/flyon)! - Sourcemaps now embed their TypeScript source, so consumers no longer see 'points to missing source files' warnings.
+
 ## 3.2.1
 
 ### Patch Changes
