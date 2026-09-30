@@ -1,5 +1,11 @@
 # @\_linked/fuseki
 
+## 3.2.3
+
+### Patch Changes
+
+- [#44](https://github.com/linked-fw/fuseki/pull/44) [`a55808d`](https://github.com/linked-fw/fuseki/commit/a55808ddf205f11603e8081e5ed64e407d2f0a41) Thanks [@flyon](https://github.com/flyon)! - Add `shapes/index`, the side-effect-only module that registers this package's shapes, so `import '@_linked/fuseki/shapes/index'` resolves like it does for every other linked package. The package defines no shapes today (`FusekiStore` is a dataset, not a `@linkedShape`), so it registers only the ontology.
+
 ## 3.2.2
 
 ### Patch Changes
