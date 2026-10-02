@@ -13,11 +13,21 @@
 import * as terms from './fuseki.js';
 import {loadData, ns} from './fuseki.js';
 import {linkedOntology} from '../package.js';
+import {Prefix} from '@_linked/core/utils/Prefix';
+
+/**
+ * @deprecated `lincd-fuseki` was this ontology's prefix label before it was aligned with the
+ * ontologySlug (`fuseki`). It stays registered as an alias so `lincd-fuseki:FusekiStore` still
+ * expands. It is added BEFORE the main registration on purpose: Prefix keeps every prefix for
+ * expansion, but compaction uses whichever prefix was added last for a URI, so the order makes
+ * compaction emit `fuseki:`.
+ */
+Prefix.add('lincd-fuseki', ns('').id);
 
 linkedOntology(
   terms,
   ns,
-  'lincd-fuseki',
+  'fuseki',
   loadData,
   '../data/fuseki.json'
 );
