@@ -1,5 +1,11 @@
 # @\_linked/fuseki
 
+## 3.4.1
+
+### Patch Changes
+
+- [#61](https://github.com/linked-fw/fuseki/pull/61) [`7e4f8fd`](https://github.com/linked-fw/fuseki/commit/7e4f8fdca9b5e95ff3eb4bac1c85c5f2e5e9980c) Thanks [@flyon](https://github.com/flyon)! - Publish only the files consumers need; the tarball no longer includes `.changeset/`, `.env-cmdrc.json`, `.gitattributes`, `.github/`, `jest.config.cjs`, `renovate.json` or tsconfig files.
+
 ## 3.4.0
 
 ### Minor Changes
