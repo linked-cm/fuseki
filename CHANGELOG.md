@@ -1,5 +1,11 @@
 # @\_linked/fuseki
 
+## 3.4.2
+
+### Patch Changes
+
+- [#63](https://github.com/linked-fw/fuseki/pull/63) [`7e8ed2a`](https://github.com/linked-fw/fuseki/commit/7e8ed2afd54dd72d39141f2dc5b26249a84b9df8) Thanks [@flyon](https://github.com/flyon)! - Build with `linked build`, the standard build for linked packages. The published `lib/` holds the same files as before; the `rimraf` and `copyfiles` dev dependencies are gone.
+
 ## 3.4.1
 
 ### Patch Changes
